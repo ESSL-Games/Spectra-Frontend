@@ -37,8 +37,8 @@ jobs:
           push: true
           platforms: linux/amd64, linux/arm64
           tags: |
-            ghcr.io/ESSL-Games/spectra-frontend:latest
-            ghcr.io/ESSL-Games/spectra-frontend:${{ env.RELEASE_TAG }}
+            ghcr.io/essl-games/spectra-frontend:latest
+            ghcr.io/essl-games/spectra-frontend:${{ env.RELEASE_TAG }}
 
 
             
