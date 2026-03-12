@@ -26,8 +26,6 @@ export class SponsorBoxComponent implements OnDestroy {
   constructor() {
     // Set up reactive sponsor rotation using effect
     effect(() => {
-      // Read the computed config to track changes
-      const config = this.sponsorConfig();
       this.setupSponsorRotation();
     });
   }

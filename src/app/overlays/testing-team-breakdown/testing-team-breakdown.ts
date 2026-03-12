@@ -103,7 +103,18 @@ export class TestingTeamBreakdown implements OnInit {
   }
 
   private createMockPlayers(): StatsApiMatchPlayer[] {
-    const agents = ["Jett", "Phoenix", "Omen", "Sage", "Sova", "Reyna", "Killjoy", "Cypher", "Viper", "Raze"];
+    const agents = [
+      "Jett",
+      "Phoenix",
+      "Omen",
+      "Sage",
+      "Sova",
+      "Reyna",
+      "Killjoy",
+      "Cypher",
+      "Viper",
+      "Raze",
+    ];
     const players: StatsApiMatchPlayer[] = [];
 
     for (let i = 0; i < 10; i++) {
@@ -140,7 +151,11 @@ export class TestingTeamBreakdown implements OnInit {
         prefered_level_border: null,
         account_level: 250,
         session_playtime_in_ms: 2400000,
-        behavior: { afk_rounds: 0, friendly_fire: { incoming: 0, outgoing: 0 }, rounds_in_spawn: 0 },
+        behavior: {
+          afk_rounds: 0,
+          friendly_fire: { incoming: 0, outgoing: 0 },
+          rounds_in_spawn: 0,
+        },
         economy: {
           spent: { overall: 45000, average: 2045 },
           loadout_value: { overall: 52000, average: 2364 },

@@ -3,7 +3,7 @@ import { AgentNameService } from "../../../services/agentName.service";
 import { AgentRoleService } from "../../../services/agentRole.service";
 import { DataModelService } from "../../../services/dataModel.service";
 import { DisplayNameService } from "../../../services/displayName.service";
-import { UltimateComponent } from "../../common/ultimate-tracker/ultimate-tracker.component";
+import UltimateComponent from "../../common/ultimate-tracker/ultimate-tracker.component";
 import { AbilitiesComponent } from "../../common/abilities/abilities.component";
 
 @Component({

@@ -3,16 +3,15 @@
     <div
       class="absolute -top-2.5 z-0 h-full w-full"
       [class]="
-        dataModel.seriesInfo().needed == 2
+        dataModel.seriesInfo().needed === 2
           ? '-left-7'
-          : dataModel.seriesInfo().needed == 3
+          : dataModel.seriesInfo().needed === 3
             ? '-left-4'
             : '-left-1'
       "
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
         width="87.563"
         height="38.968"
         viewBox="0 0 87.563 38.968"
@@ -42,16 +41,15 @@
     <div
       class="absolute -top-2.5 z-0 h-full w-full"
       [class]="
-        dataModel.seriesInfo().needed == 2
+        dataModel.seriesInfo().needed === 2
           ? '-right-60'
-          : dataModel.seriesInfo().needed == 3
+          : dataModel.seriesInfo().needed === 3
             ? '-right-63'
             : '-right-66'
       "
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
         width="87.716"
         height="38.981"
         viewBox="0 0 87.716 38.981"
@@ -88,9 +86,9 @@
     }
     <div
       [class]="
-        dataModel.seriesInfo().needed == 2
+        dataModel.seriesInfo().needed === 2
           ? 'vw-212'
-          : dataModel.seriesInfo().needed == 3
+          : dataModel.seriesInfo().needed === 3
             ? 'vw-192'
             : 'vw-170'
       "

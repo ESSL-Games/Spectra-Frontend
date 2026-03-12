@@ -9,6 +9,7 @@ import {
   ElementRef,
   ChangeDetectorRef,
   OnDestroy,
+  inject,
 } from "@angular/core";
 import { NgIf, NgFor, NgClass } from "@angular/common";
 
@@ -19,7 +20,7 @@ import { NgIf, NgFor, NgClass } from "@angular/common";
   templateUrl: "ultimate-tracker.component.html",
   styleUrl: "ultimate-tracker.component.css",
 })
-export class UltimateComponent implements AfterViewInit, OnChanges, DoCheck, OnDestroy {
+class UltimateComponent implements AfterViewInit, OnChanges, DoCheck, OnDestroy {
   public readonly assets: string = "../../../assets";
 
   private _player: any;
@@ -48,10 +49,8 @@ export class UltimateComponent implements AfterViewInit, OnChanges, DoCheck, OnD
   private animationFrameId?: number;
   private isDestroyed = false;
 
-  constructor(
-    public config: Config,
-    private cdRef: ChangeDetectorRef,
-  ) {}
+  public config = inject(Config);
+  private cdRef = inject(ChangeDetectorRef);
 
   ngOnDestroy(): void {
     this.isDestroyed = true;
@@ -302,7 +301,7 @@ export class UltimateComponent implements AfterViewInit, OnChanges, DoCheck, OnD
       };
 
       // Enhanced pause handler to prevent stuttering
-      const pauseHandler = (e: Event) => {
+      const pauseHandler = () => {
         if (!this.isDestroyed && this.player?.ultReady && !video.ended) {
           // Use requestAnimationFrame for better performance
           this.animationFrameId = requestAnimationFrame(() => {
@@ -394,3 +393,5 @@ export class UltimateComponent implements AfterViewInit, OnChanges, DoCheck, OnD
     this.wasUltReady = isUltReady;
   }
 }
+
+export default UltimateComponent;
