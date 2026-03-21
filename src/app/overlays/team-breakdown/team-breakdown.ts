@@ -1,4 +1,4 @@
-import { Component, inject, OnDestroy, OnInit } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit, signal, effect } from "@angular/core";
 import { Config } from "../../shared/config";
 import { HttpClient } from "@angular/common/http";
 import { ActivatedRoute } from "@angular/router";
@@ -14,6 +14,7 @@ import { TranslateKeys } from "../../services/i18nHelper";
 import { TranslatePipe } from "@ngx-translate/core";
 import { Subscription } from "rxjs";
 import { DataModelService } from "../../services/dataModel.service";
+import { ISponsorInfo, ITournamentInfo } from "../../services/Types";
 
 @Component({
   selector: "app-team-breakdown",
@@ -45,6 +46,29 @@ export class TeamBreakdown implements OnInit, OnDestroy {
   private hasReceivedData = false;
   private pollTimerRef?: ReturnType<typeof setInterval>;
   private routeSubscription?: Subscription;
+
+  protected currentSponsorIndex = signal(0);
+  private sponsorIntervalId?: number;
+
+  constructor() {
+    effect(() => {
+      const sponsorInfo = this.dataModel.sponsorInfo();
+
+      if (this.sponsorIntervalId) {
+        clearInterval(this.sponsorIntervalId);
+        this.sponsorIntervalId = undefined;
+      }
+      this.currentSponsorIndex.set(0);
+
+      if (sponsorInfo.enabled && sponsorInfo.sponsors.length > 1) {
+        const duration = sponsorInfo.duration > 100 ? sponsorInfo.duration : sponsorInfo.duration * 1000;
+        this.sponsorIntervalId = window.setInterval(() => {
+          this.currentSponsorIndex.update((i) => (i + 1) % this.dataModel.sponsorInfo().sponsors.length);
+        }, duration);
+      }
+    });
+  }
+
 
   ngOnInit() {
     this.routeSubscription = this.route.queryParams.subscribe((params) => {
@@ -96,24 +120,39 @@ export class TeamBreakdown implements OnInit, OnDestroy {
 
         this.hasReceivedData = true;
         this.stopPolling();
-        this.processStatsData(response.data, groupCode);
+        this.processStatsDataIncoming(response.data, groupCode);
       });
   }
 
-  processStatsData(data: StatsApiMatch, groupCode: string) {
+  processStatsDataIncoming(data: StatsApiMatch, groupCode: string) {
     this.statsData = data;
     this.roundsPlayed = this.statsData.rounds.length;
 
-    this.leftTeam = this.statsData.teams.find((team) => team.team_id === this.leftTeamName);
-    this.rightTeam = this.statsData.teams.find((team) => team.team_id === this.rightTeamName);
+    this.http
+      .get<{ leftTeam: AuthTeam; rightTeam: AuthTeam; higherScore: 0 | 1; tournamentInfo?: ITournamentInfo; sponsorInfo?: ISponsorInfo }>(
+        `${this.config.extrasEndpoint}/getTeamInfoForCode`,
+        {
+          params: { groupCode },
+        },
+      )
+      .subscribe((data) => {
+        if (data.tournamentInfo) this.dataModel.setTournamentInfo(data.tournamentInfo);
+        if (data.sponsorInfo) this.dataModel.setSponsorInfo(data.sponsorInfo);
+        this.processTeamInfo(data);
+      });
+  }
+
+  processStatsDataFully() {
+    this.leftTeam = this.statsData!.teams.find((team) => team.team_id === this.leftTeamName);
+    this.rightTeam = this.statsData!.teams.find((team) => team.team_id === this.rightTeamName);
 
     // Do this here so that when the players get distributed they definitely have the info
     this.calculateFirstKills();
 
-    this.leftPlayers = this.statsData.players.filter(
+    this.leftPlayers = this.statsData!.players.filter(
       (player) => player.team_id === this.leftTeamName,
     );
-    this.rightPlayers = this.statsData.players.filter(
+    this.rightPlayers = this.statsData!.players.filter(
       (player) => player.team_id === this.rightTeamName,
     );
 
@@ -126,17 +165,6 @@ export class TeamBreakdown implements OnInit, OnDestroy {
 
     this.leftPlayers.sort((a, b) => (b.stats.acs || 0) - (a.stats.acs || 0));
     this.rightPlayers.sort((a, b) => (b.stats.acs || 0) - (a.stats.acs || 0));
-
-    this.http
-      .get<{ leftTeam: AuthTeam; rightTeam: AuthTeam }>(
-        `${this.config.extrasEndpoint}/getTeamInfoForCode`,
-        {
-          params: { groupCode },
-        },
-      )
-      .subscribe((data: { leftTeam: AuthTeam; rightTeam: AuthTeam }) => {
-        this.processTeamInfo(data);
-      });
   }
 
   calculateFirstKills() {
@@ -158,7 +186,19 @@ export class TeamBreakdown implements OnInit, OnDestroy {
     }
   }
 
-  processTeamInfo(teamInfo: { leftTeam: AuthTeam; rightTeam: AuthTeam }) {
+  processTeamInfo(teamInfo: { leftTeam: AuthTeam; rightTeam: AuthTeam; higherScore: 0 | 1 }) {
+    const leftWon = teamInfo.higherScore === 0 ? true : false;
+    const winningTeam = this.statsData!.teams.find((team) => team.won === true);
+    if (leftWon) {
+      this.leftTeamName = winningTeam?.team_id || "Red";
+      this.rightTeamName = winningTeam?.team_id === "Red" ? "Blue" : "Red";
+    } else {
+      this.rightTeamName = winningTeam?.team_id || "Red";
+      this.leftTeamName = winningTeam?.team_id === "Red" ? "Blue" : "Red";
+    }
+
+    this.processStatsDataFully();
+
     this.leftTeam = {
       ...this.leftTeam!,
       name: teamInfo.leftTeam.name,

@@ -87,6 +87,12 @@ export class TestingAgentSelectComponent implements OnInit {
         nameOverrides: {
           overrides: [],
         },
+        toastInfo: {
+          active: false,
+          duration: 10000,
+          message: "",
+          eventLogoEnabled: true,
+        },
       },
       timeoutState: {
         techPause: false,
@@ -576,6 +582,7 @@ export class TestingAgentSelectComponent implements OnInit {
     "Guide",
     "Gumshoe",
     "Hunter",
+    "Iris",
     "Killjoy",
     "Mage",
     "Nox",
