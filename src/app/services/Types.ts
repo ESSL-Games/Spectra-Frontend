@@ -14,6 +14,7 @@ export interface IMatchData {
   switchRound: number;
   firstOtRound: number;
   attackersWon: boolean;
+  toastInfo: IToastInfo;
 }
 
 export interface ITeamData {
@@ -95,7 +96,7 @@ export interface IToastInfo {
   message: string;
   duration: number | null;
   eventLogoEnabled: boolean;
-  selectedTeam?: "left" | "right";
+  selectedTeam?: "left" | "right" | "none";
 }
 
 //#endregion
@@ -112,7 +113,7 @@ export interface IToolsData {
   watermarkInfo: IWatermarkInfo;
   playercamsInfo: IPlayercamsInfo;
   nameOverrides: INameOverrides;
-  toastInfo: IToastInfo;
+  roundWinBox: IRoundWinBox;
 }
 
 export interface ISeriesInfo {
@@ -131,7 +132,6 @@ export interface ITournamentInfo {
   name: string;
   logoUrl: string;
   backdropUrl: string;
-  enabled: boolean;
 }
 
 export interface ISponsorInfo {
@@ -157,6 +157,18 @@ export interface IPlayercamsInfo {
 
 export interface INameOverrides {
   overrides: string[];
+}
+
+export interface IRoundWinBox {
+  type: "disabled" | "tournamentInfo" | "sponsors";
+  sponsors: IRoundWinBoxSponsors[];
+}
+
+export interface IRoundWinBoxSponsors {
+  wonTeam: "all" | "left" | "right";
+  roundCeremonie: ("all" | "normal" | "ace" | "clutch" | "teamAce" | "flawless" | "thrifty")[];
+  iconUrl: string;
+  backdropUrl: string;
 }
 
 export interface IOverridesPlayercamsData {

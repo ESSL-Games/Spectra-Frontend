@@ -2,7 +2,6 @@ import { Component, Input, OnInit } from "@angular/core";
 import { AgentNameService } from "../../../services/agentName.service";
 import { AgentRoleService } from "../../../services/agentRole.service";
 import { StatsApiMatchPlayer } from "../StatsApiMapping";
-import { TranslateKeys } from "../../../services/i18nHelper";
 
 @Component({
   selector: "app-regular-player",
@@ -11,8 +10,6 @@ import { TranslateKeys } from "../../../services/i18nHelper";
   styleUrl: "./regular-player.css",
 })
 export class RegularPlayer implements OnInit {
-  TranslateKeys = TranslateKeys;
-
   @Input({ required: true })
   player!: StatsApiMatchPlayer;
 
@@ -22,7 +19,7 @@ export class RegularPlayer implements OnInit {
   agentInternalName = "";
 
   ngOnInit() {
-    this.agentInternalName = AgentNameService.getAgentInternalName(this.player.agent.name!)!;
+    this.agentInternalName = AgentNameService.getAgentInternalName(this.player.agent.name ?? "");
   }
 
   getAgentRole(name: string): string {

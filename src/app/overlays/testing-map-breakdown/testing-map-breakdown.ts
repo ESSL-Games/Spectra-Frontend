@@ -137,18 +137,19 @@ export class TestingMapBreakdown implements OnInit, OnDestroy {
         sponsorInfo: {
           enabled: true,
           duration: 5000,
-          sponsors: [
-            "assets/misc/logo.webp",
-          ],
+          sponsors: ["assets/misc/logo.webp"],
         },
       },
     }));
 
     const sponsorInfo = this.dataModel.sponsorInfo();
     if (sponsorInfo.enabled && sponsorInfo.sponsors.length > 1) {
-      const duration = sponsorInfo.duration > 100 ? sponsorInfo.duration : sponsorInfo.duration * 1000;
+      const duration =
+        sponsorInfo.duration > 100 ? sponsorInfo.duration : sponsorInfo.duration * 1000;
       this.sponsorIntervalId = window.setInterval(() => {
-        this.currentSponsorIndex.update((i) => (i + 1) % this.dataModel.sponsorInfo().sponsors.length);
+        this.currentSponsorIndex.update(
+          (i) => (i + 1) % this.dataModel.sponsorInfo().sponsors.length,
+        );
       }, duration);
     }
   }
