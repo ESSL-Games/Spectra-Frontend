@@ -1,5 +1,5 @@
 import { HttpClient } from "@angular/common/http";
-import { Component, OnInit, OnDestroy, inject } from "@angular/core";
+import { Component, OnInit, OnDestroy, inject, signal, effect } from "@angular/core";
 import { ActivatedRoute } from "@angular/router";
 import { Subscription } from "rxjs";
 import {
@@ -13,6 +13,8 @@ import {
 import { TranslateKeys } from "../../services/i18nHelper";
 import { Config } from "../../shared/config";
 import { TranslatePipe } from "@ngx-translate/core";
+import { DataModelService } from "../../services/dataModel.service";
+import { ISponsorInfo, ITournamentInfo } from "../../services/Types";
 
 @Component({
   selector: "app-map-breakdown",
@@ -21,6 +23,7 @@ import { TranslatePipe } from "@ngx-translate/core";
   styleUrl: "./map-breakdown.css",
 })
 export class MapBreakdown implements OnInit, OnDestroy {
+  protected dataModel = inject(DataModelService);
   protected config = inject(Config);
   private leftTeamName = "Blue";
   private rightTeamName = "Red";
@@ -70,6 +73,9 @@ export class MapBreakdown implements OnInit, OnDestroy {
   protected rightFlawless = 0;
   protected rightWonPostPlants = 0;
 
+  protected currentSponsorIndex = signal(0);
+  private sponsorIntervalId?: number;
+
   protected roundReasons: Record<
     number,
     { winner: 0 | 1; reason: "defused" | "detonated" | "kills" | "timeout" }
@@ -78,6 +84,28 @@ export class MapBreakdown implements OnInit, OnDestroy {
   private hasReceivedData = false;
   private pollTimerRef?: ReturnType<typeof setInterval>;
   private routeSubscription?: Subscription;
+
+  constructor() {
+    effect(() => {
+      const sponsorInfo = this.dataModel.sponsorInfo();
+
+      if (this.sponsorIntervalId) {
+        clearInterval(this.sponsorIntervalId);
+        this.sponsorIntervalId = undefined;
+      }
+      this.currentSponsorIndex.set(0);
+
+      if (sponsorInfo.enabled && sponsorInfo.sponsors.length > 1) {
+        const duration =
+          sponsorInfo.duration > 100 ? sponsorInfo.duration : sponsorInfo.duration * 1000;
+        this.sponsorIntervalId = window.setInterval(() => {
+          this.currentSponsorIndex.update(
+            (i) => (i + 1) % this.dataModel.sponsorInfo().sponsors.length,
+          );
+        }, duration);
+      }
+    });
+  }
 
   ngOnInit() {
     this.routeSubscription = this.route.queryParams.subscribe((params) => {
@@ -98,6 +126,9 @@ export class MapBreakdown implements OnInit, OnDestroy {
   ngOnDestroy() {
     this.stopPolling();
     this.routeSubscription?.unsubscribe();
+    if (this.sponsorIntervalId) {
+      clearInterval(this.sponsorIntervalId);
+    }
   }
 
   private startPolling(groupCode: string) {
@@ -129,24 +160,42 @@ export class MapBreakdown implements OnInit, OnDestroy {
 
         this.hasReceivedData = true;
         this.stopPolling();
-        this.processStatsData(response.data, groupCode);
+        this.processStatsDataIncoming(response.data, groupCode);
       });
   }
 
-  processStatsData(data: StatsApiMatch, groupCode: string) {
+  processStatsDataIncoming(data: StatsApiMatch, groupCode: string) {
     this.statsData = data;
     this.roundsPlayed = this.statsData.rounds.length;
 
-    this.leftTeam = this.statsData.teams.find((team) => team.team_id === this.leftTeamName);
-    this.rightTeam = this.statsData.teams.find((team) => team.team_id === this.rightTeamName);
+    this.http
+      .get<{
+        leftTeam: AuthTeam;
+        rightTeam: AuthTeam;
+        higherScore: 0 | 1;
+        tournamentInfo?: ITournamentInfo;
+        sponsorInfo?: ISponsorInfo;
+      }>(`${this.config.extrasEndpoint}/getTeamInfoForCode`, {
+        params: { groupCode },
+      })
+      .subscribe((data) => {
+        if (data.tournamentInfo) this.dataModel.setTournamentInfo(data.tournamentInfo);
+        if (data.sponsorInfo) this.dataModel.setSponsorInfo(data.sponsorInfo);
+        this.processTeamInfo(data);
+      });
+  }
+
+  private processStatsDataFully() {
+    this.leftTeam = this.statsData!.teams.find((team) => team.team_id === this.leftTeamName);
+    this.rightTeam = this.statsData!.teams.find((team) => team.team_id === this.rightTeamName);
 
     // Do this here so that when the players get distributed they definitely have the info
     this.calculateFirstKills();
 
-    this.leftPlayers = this.statsData.players.filter(
+    this.leftPlayers = this.statsData!.players.filter(
       (player) => player.team_id === this.leftTeamName,
     );
-    this.rightPlayers = this.statsData.players.filter(
+    this.rightPlayers = this.statsData!.players.filter(
       (player) => player.team_id === this.rightTeamName,
     );
 
@@ -196,7 +245,7 @@ export class MapBreakdown implements OnInit, OnDestroy {
     let leftRetakeSuccesses = 0;
     let rightRetakeSuccesses = 0;
 
-    this.statsData.rounds.forEach((round) => {
+    this.statsData!.rounds.forEach((round) => {
       if (round.plant != null) {
         if (round.plant.player.team === this.rightTeamName) {
           leftRetakeOpportunities++;
@@ -290,20 +339,9 @@ export class MapBreakdown implements OnInit, OnDestroy {
     this.rightRetakeRate = Math.round(
       (rightRetakeSuccesses / (rightRetakeOpportunities || 1)) * 100,
     );
-
-    this.http
-      .get<{ leftTeam: AuthTeam; rightTeam: AuthTeam }>(
-        `${this.config.extrasEndpoint}/getTeamInfoForCode`,
-        {
-          params: { groupCode },
-        },
-      )
-      .subscribe((data: { leftTeam: AuthTeam; rightTeam: AuthTeam }) => {
-        this.processTeamInfo(data);
-      });
   }
 
-  calculateFirstKills() {
+  private calculateFirstKills() {
     const fkById: Record<string, number> = {};
     this.statsData?.players.forEach((player) => {
       fkById[player.puuid] = 0;
@@ -390,7 +428,19 @@ export class MapBreakdown implements OnInit, OnDestroy {
     this.rightKillTradeRate = Math.round((rightTradedKills / (rightEligibleKills || 1)) * 100);
   }
 
-  processTeamInfo(teamInfo: { leftTeam: AuthTeam; rightTeam: AuthTeam }) {
+  processTeamInfo(teamInfo: { leftTeam: AuthTeam; rightTeam: AuthTeam; higherScore: 0 | 1 }) {
+    const leftWon = teamInfo.higherScore === 0 ? true : false;
+    const winningTeam = this.statsData!.teams.find((team) => team.won === true);
+    if (leftWon) {
+      this.leftTeamName = winningTeam?.team_id || "Red";
+      this.rightTeamName = winningTeam?.team_id === "Red" ? "Blue" : "Red";
+    } else {
+      this.rightTeamName = winningTeam?.team_id || "Red";
+      this.leftTeamName = winningTeam?.team_id === "Red" ? "Blue" : "Red";
+    }
+
+    this.processStatsDataFully();
+
     this.leftTeam = {
       ...this.leftTeam!,
       name: teamInfo.leftTeam.name,

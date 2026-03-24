@@ -2,15 +2,17 @@ import { Component, inject, OnInit, signal } from "@angular/core";
 import { MatchOverlayComponent } from "../match-overlay/match-overlay.component";
 import { DataModelService, initialMatchData } from "../../services/dataModel.service";
 import { IMatchData } from "../../services/Types";
+import { LiveToastComponent } from "../toast-overlay/toast-component";
 
 @Component({
   selector: "app-testing-new",
-  imports: [MatchOverlayComponent],
+  imports: [MatchOverlayComponent, LiveToastComponent],
   templateUrl: "./testing.component.html",
   styleUrl: "./testing.component.css",
 })
 export class TestingComponent implements OnInit {
   dataModel = inject(DataModelService);
+  private toastTimerRef?: ReturnType<typeof setTimeout>;
   match: IMatchData = initialMatchData;
 
   ngOnInit(): void {
@@ -60,7 +62,6 @@ export class TestingComponent implements OnInit {
           right: "Group B",
         },
         tournamentInfo: {
-          enabled: true,
           name: "",
           logoUrl: "",
           backdropUrl: "",
@@ -88,6 +89,17 @@ export class TestingComponent implements OnInit {
           removeTricodes: false,
         },
         nameOverrides: { overrides: [] },
+        roundWinBox: {
+          type: "tournamentInfo",
+          sponsors: [],
+        },
+      },
+      toastInfo: {
+        active: false,
+        duration: 10000,
+        message: "",
+        selectedTeam: "left",
+        eventLogoEnabled: true,
       },
       timeoutState: {
         techPause: false,
@@ -99,8 +111,8 @@ export class TestingComponent implements OnInit {
         {
           players: [
             {
-              name: "FNC OO AA EE",
-              fullName: "FNC OO AA EE#1337",
+              name: "MrFoxy",
+              fullName: "MrFoxy#prod",
               playerId: 0,
               isAlive: true,
               agentInternal: "Stealth",
@@ -136,8 +148,8 @@ export class TestingComponent implements OnInit {
               locked: false,
             },
             {
-              name: "Twoperator",
-              fullName: "Twoperator#DEBUG",
+              name: "RedStone201",
+              fullName: "TTV RedStone201#uhhhh",
               playerId: 0,
               isAlive: true,
               agentInternal: "Smonk",
@@ -251,7 +263,7 @@ export class TestingComponent implements OnInit {
               fullName: "FIVEbyFIVE#DEBUG",
               playerId: 0,
               isAlive: true,
-              agentInternal: "Wushu",
+              agentInternal: "Iris",
               isObserved: false,
               armorName: "Heavy",
               money: 2100,
@@ -826,5 +838,43 @@ export class TestingComponent implements OnInit {
       ret.timeoutState.timeRemaining = 0;
       return ret;
     });
+  }
+
+  showToast() {
+    const currentlyActive = this.dataModel.match().toastInfo.active;
+
+    if (currentlyActive) {
+      // Deactivate immediately (mimics pressing the hotkey again)
+      clearTimeout(this.toastTimerRef);
+      this.toastTimerRef = undefined;
+      this.dataModel.match.update((v) => {
+        const ret = v;
+        ret.toastInfo.active = false;
+        return ret;
+      });
+    } else {
+      // Activate
+      this.dataModel.match.update((v) => {
+        const ret = v;
+        ret.toastInfo.active = true;
+        ret.toastInfo.message = "This is a live toast preview. Thanks for using Spectra!";
+        ret.toastInfo.duration = null;
+        ret.toastInfo.eventLogoEnabled = true;
+        return ret;
+      });
+
+      const duration = this.dataModel.match().toastInfo.duration;
+      if (duration !== null) {
+        clearTimeout(this.toastTimerRef);
+        this.toastTimerRef = setTimeout(() => {
+          this.dataModel.match.update((v) => {
+            const ret = v;
+            ret.toastInfo.active = false;
+            return ret;
+          });
+          this.toastTimerRef = undefined;
+        }, duration);
+      }
+    }
   }
 }

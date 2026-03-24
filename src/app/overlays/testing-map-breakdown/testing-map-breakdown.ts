@@ -1,4 +1,4 @@
-import { Component, OnInit } from "@angular/core";
+import { Component, inject, OnDestroy, OnInit, signal } from "@angular/core";
 import {
   StatsApiMatch,
   StatsApiMatchPlayer,
@@ -8,6 +8,7 @@ import {
 } from "../../components/breakdown/StatsApiMapping";
 import { TranslateKeys } from "../../services/i18nHelper";
 import { TranslatePipe } from "@ngx-translate/core";
+import { DataModelService } from "../../services/dataModel.service";
 
 @Component({
   selector: "app-testing-map-breakdown",
@@ -15,11 +16,16 @@ import { TranslatePipe } from "@ngx-translate/core";
   templateUrl: "./testing-map-breakdown.html",
   styleUrl: "./testing-map-breakdown.css",
 })
-export class TestingMapBreakdown implements OnInit {
+export class TestingMapBreakdown implements OnInit, OnDestroy {
   TranslateKeys = TranslateKeys;
+
+  dataModel = inject(DataModelService);
 
   protected hideBg = false;
   protected statsData?: StatsApiMatch;
+
+  protected currentSponsorIndex = signal(0);
+  private sponsorIntervalId?: number;
   protected roundsPlayed = 0;
 
   protected leftTeam?: StatsApiMatchTeam;
@@ -65,6 +71,12 @@ export class TestingMapBreakdown implements OnInit {
 
   ngOnInit() {
     this.initializeMockData();
+  }
+
+  ngOnDestroy() {
+    if (this.sponsorIntervalId) {
+      clearInterval(this.sponsorIntervalId);
+    }
   }
 
   private initializeMockData() {
@@ -116,6 +128,30 @@ export class TestingMapBreakdown implements OnInit {
 
     this.roundsPlayed = this.statsData.rounds.length;
     this.processStatsData();
+
+    // Inject mock sponsor data for testing, then start rotation
+    this.dataModel.match.update((data) => ({
+      ...data,
+      tools: {
+        ...data.tools,
+        sponsorInfo: {
+          enabled: true,
+          duration: 5000,
+          sponsors: ["assets/misc/logo.webp"],
+        },
+      },
+    }));
+
+    const sponsorInfo = this.dataModel.sponsorInfo();
+    if (sponsorInfo.enabled && sponsorInfo.sponsors.length > 1) {
+      const duration =
+        sponsorInfo.duration > 100 ? sponsorInfo.duration : sponsorInfo.duration * 1000;
+      this.sponsorIntervalId = window.setInterval(() => {
+        this.currentSponsorIndex.update(
+          (i) => (i + 1) % this.dataModel.sponsorInfo().sponsors.length,
+        );
+      }, duration);
+    }
   }
 
   private processStatsData() {
@@ -352,7 +388,7 @@ export class TestingMapBreakdown implements OnInit {
       StatsApiWinReasons.Detonated,
     ];
 
-    for (let i = 1; i <= 22; i++) {
+    for (let i = 1; i <= 23; i++) {
       const winningTeam = i % 3 === 0 ? "Red" : "Blue";
       const hasPlant = Math.random() > 0.3;
 

@@ -1,16 +1,22 @@
 @if (leftTeam?.tricode && rightTeam?.tricode) {
 <div class="flex h-screen w-screen flex-row">
+  @if (!hideBg) {
+  <img class="absolute -z-10" src="/assets/maps/wide/{{statsData?.metadata?.map?.name}}.webp" />
+  }
   <!-- LEFT TEAM -->
   <div
     class="relative my-4.5 ml-10 grid h-97/100 w-[740px] grid-cols-[740px] grid-rows-[220px_10px_160px_160px_10px_485px]"
   >
     <!-- Team Info -->
-    <div class="row-span-1 rounded-tl-lg bg-black/10 backdrop-blur-2xl backdrop-brightness-40">
+    <div
+      class="row-span-1 rounded-tl-lg backdrop-blur-2xl backdrop-brightness-40"
+      [class]="hideBg ? 'bg-black/90' : 'bg-black/10'"
+    >
       <div class="flex h-full w-full flex-row items-center">
         <img class="h-3/4 w-1/6 object-contain p-8" src="{{leftTeam?.url}}" />
         <div class="flex h-1/2 w-2/6 flex-col justify-around">
           <span class="font-replica ml-2 text-6xl text-white uppercase">{{leftTeam?.tricode}}</span>
-          <span class="font-replica ml-2 text-3xl text-[#FFD075] uppercase"
+          <span class="font-replica text-postmatch-secondary ml-2 text-3xl uppercase"
             >{{ (leftTeam?.won ? TranslateKeys.Breakdown_Win : TranslateKeys.Breakdown_Loss) |
             translate }}</span
           >
@@ -63,7 +69,7 @@
             width="1840"
             height="10"
             transform="translate(40 238)"
-            fill="#ae2a2a"
+            fill="var(--color-postmatch-primary)"
           />
           <!-- Accent fill -->
           <rect
@@ -80,7 +86,8 @@
     </div>
     <!-- MVP -->
     <div
-      class="absolute -z-10 mt-[230px] h-[320px] w-[740px] bg-black/30 backdrop-blur-xl backdrop-brightness-90"
+      class="absolute -z-10 mt-[230px] h-[320px] w-[740px] backdrop-blur-xl backdrop-brightness-90"
+      [class]="hideBg ? 'bg-black/70' : 'bg-black/30'"
     ></div>
     <app-mvp-player
       [player]="leftPlayers![0]"
@@ -128,7 +135,7 @@
             width="1840"
             height="10"
             transform="translate(40 238)"
-            fill="#ae2a2a"
+            fill="var(--color-postmatch-primary)"
           />
           <rect
             id="_3511f4ab-b25b-44d2-939b-c9228ad71e7b"
@@ -150,7 +157,7 @@
           src="/assets/maps/tall/{{statsData?.metadata?.map?.name}}.webp"
         />
         <div
-          class="absolute bottom-0 left-0 flex h-14 w-57.5 items-center justify-center rounded-tr-lg bg-[#AE2A2A]"
+          class="bg-postmatch-primary absolute bottom-0 left-0 flex h-14 w-57.5 items-center justify-center rounded-tr-lg"
         >
           <span class="font-replica text-3xl text-white uppercase"
             >{{statsData?.metadata?.map?.name}}</span
@@ -165,16 +172,19 @@
           [player]="leftPlayers![$index]"
         ></app-regular-player>
         } }
-        <div class="absolute bottom-1 z-2 h-0.5 w-312.5 bg-[#AE2A2A]"></div>
-        <div class="absolute bottom-31 z-2 h-0.5 w-312.5 bg-[#AE2A2A]"></div>
-        <div class="absolute bottom-61.5 z-2 h-0.5 w-312.5 bg-[#AE2A2A]"></div>
-        <div class="absolute bottom-91.5 z-2 h-0.5 w-312.5 bg-[#AE2A2A]"></div>
+        <div class="bg-postmatch-primary absolute bottom-1 z-2 h-0.5 w-312.5"></div>
+        <div class="bg-postmatch-primary absolute bottom-31 z-2 h-0.5 w-312.5"></div>
+        <div class="bg-postmatch-primary absolute bottom-61.5 z-2 h-0.5 w-312.5"></div>
+        <div class="bg-postmatch-primary absolute bottom-91.5 z-2 h-0.5 w-312.5"></div>
       </div>
     </div>
   </div>
   <!-- Middle Info Panel -->
   <div class="z-1 my-4.5 flex w-90 flex-col gap-2.5">
-    <div class="flex h-55 items-center backdrop-blur-2xl backdrop-brightness-60">
+    <div
+      class="flex h-55 items-center backdrop-blur-2xl backdrop-brightness-70"
+      [class]="hideBg ? 'bg-black/80' : 'bg-black/30'"
+    >
       <img
         class="h-36 w-full object-contain"
         [src]="dataModel.tournamentInfo().logoUrl || 'assets/misc/icon.webp'"
@@ -205,7 +215,10 @@
     class="relative my-4.5 mr-10 grid h-97/100 w-[740px] grid-cols-[740px] grid-rows-[220px_10px_160px_160px_10px_485px]"
   >
     <!-- Team Info -->
-    <div class="row-span-1 rounded-tr-lg bg-black/10 backdrop-blur-2xl backdrop-brightness-40">
+    <div
+      class="row-span-1 rounded-tr-lg backdrop-blur-2xl backdrop-brightness-40"
+      [class]="hideBg ? 'bg-black/90' : 'bg-black/10'"
+    >
       <div class="flex h-full w-full flex-row items-center">
         <div class="font-foundry-extrabold w-1/6 pl-6 text-center text-[108px] text-white">
           {{rightTeam?.rounds?.won}}
@@ -215,7 +228,7 @@
           <span class="font-replica mr-2 text-6xl text-white uppercase"
             >{{rightTeam?.tricode}}</span
           >
-          <span class="font-replica mr-2 text-3xl text-[#FFD075] uppercase"
+          <span class="font-replica text-postmatch-secondary mr-2 text-3xl uppercase"
             >{{ (rightTeam?.won ? TranslateKeys.Breakdown_Win : TranslateKeys.Breakdown_Loss) |
             translate }}</span
           >
@@ -228,6 +241,7 @@
     <!-- MVP -->
     <div
       class="absolute -z-10 mt-[230px] h-[320px] w-[740px] bg-black/30 backdrop-blur-xl backdrop-brightness-90"
+      [class]="hideBg ? 'bg-black/70' : 'bg-black/30'"
     ></div>
     <app-mvp-player
       [player]="rightPlayers![0]"
@@ -251,10 +265,14 @@
       <div
         class="relative flex h-[485px] w-[295px] items-center justify-center overflow-hidden rounded-br-lg bg-[#111111]"
       >
+        @if(dataModel.sponsorInfo().sponsors.length > 0 && dataModel.sponsorInfo().enabled) { @for
+        (sponsor of dataModel.sponsorInfo().sponsors; track $index) {
         <img
-          class="h-18 w-full object-contain"
-          src="{{dataModel.sponsorInfo().sponsors[0] || 'assets/misc/logo.webp'}}"
+          class="sponsor-img absolute w-62 object-contain"
+          [class.active]="currentSponsorIndex() === $index"
+          [src]="sponsor"
         />
+        } }
       </div>
     </div>
   </div>

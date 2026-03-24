@@ -1,4 +1,4 @@
-import { Component, OnInit, inject } from "@angular/core";
+import { Component, OnInit, OnDestroy, inject, signal } from "@angular/core";
 import { MvpPlayer } from "../../components/breakdown/mvp-player/mvp-player";
 import { RegularPlayer } from "../../components/breakdown/regular-player/regular-player";
 import {
@@ -16,13 +16,16 @@ import { DataModelService } from "../../services/dataModel.service";
   templateUrl: "./testing-team-breakdown.html",
   styleUrl: "./testing-team-breakdown.css",
 })
-export class TestingTeamBreakdown implements OnInit {
+export class TestingTeamBreakdown implements OnInit, OnDestroy {
   dataModel = inject(DataModelService);
 
   TranslateKeys = TranslateKeys;
 
   protected hideBg = false;
   protected statsData?: StatsApiMatch;
+
+  protected currentSponsorIndex = signal(0);
+  private sponsorIntervalId?: number;
   protected roundsPlayed = 0;
 
   protected leftTeam?: StatsApiMatchTeam;
@@ -33,6 +36,12 @@ export class TestingTeamBreakdown implements OnInit {
 
   ngOnInit() {
     this.initializeMockData();
+  }
+
+  ngOnDestroy() {
+    if (this.sponsorIntervalId) {
+      clearInterval(this.sponsorIntervalId);
+    }
   }
 
   private initializeMockData() {
@@ -80,6 +89,30 @@ export class TestingTeamBreakdown implements OnInit {
       rounds: this.createMockRounds(),
       kills: this.createMockKills(mockPlayers),
     };
+
+    // Inject mock sponsor data for testing, then start rotation
+    this.dataModel.match.update((data) => ({
+      ...data,
+      tools: {
+        ...data.tools,
+        sponsorInfo: {
+          enabled: true,
+          duration: 5000,
+          sponsors: ["assets/misc/logo.webp"],
+        },
+      },
+    }));
+
+    const sponsorInfo = this.dataModel.sponsorInfo();
+    if (sponsorInfo.enabled && sponsorInfo.sponsors.length > 1) {
+      const duration =
+        sponsorInfo.duration > 100 ? sponsorInfo.duration : sponsorInfo.duration * 1000;
+      this.sponsorIntervalId = window.setInterval(() => {
+        this.currentSponsorIndex.update(
+          (i) => (i + 1) % this.dataModel.sponsorInfo().sponsors.length,
+        );
+      }, duration);
+    }
 
     this.roundsPlayed = this.statsData.rounds.length;
 
