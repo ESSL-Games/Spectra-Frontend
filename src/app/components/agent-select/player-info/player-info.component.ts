@@ -1,5 +1,6 @@
-import { Component, effect, input } from "@angular/core";
+import { Component, effect, inject, Input, input } from "@angular/core";
 import { AgentRoleService } from "../../../services/agentRole.service";
+import { DisplayNameService } from "../../../services/displayName.service";
 
 @Component({
   selector: "app-agent-select-player-info",
@@ -8,12 +9,14 @@ import { AgentRoleService } from "../../../services/agentRole.service";
   styleUrl: "./player-info.component.css",
 })
 export class AgentSelectPlayerInfoComponent {
+  @Input() player!: any;
   agent = input<string>("");
   locked = input<boolean>(false);
-  playerName = input<string>();
 
   color = input<string>();
   down = input<boolean>(false);
+
+  getDisplayName = inject(DisplayNameService).getDisplayName;
 
   previousAgent = "";
   previousLock = false;
