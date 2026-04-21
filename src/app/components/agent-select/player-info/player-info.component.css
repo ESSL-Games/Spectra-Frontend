@@ -52,13 +52,17 @@
 
 @keyframes lockAnimation {
   from {
-    filter: grayscale(1) brightness(200%);
+    filter: opacity(0.45) brightness(200%);
   }
   to {
-    filter: grayscale(0) brightness(100%);
+    filter: opacity(1) brightness(100%);
   }
 }
 .animate-lock {
   animation: lockAnimation 300ms ease-out;
   will-change: filter;
+}
+
+.lock {
+  opacity: 0.45;
 }
