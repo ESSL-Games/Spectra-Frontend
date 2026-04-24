@@ -28,6 +28,7 @@ export class TestingComponent implements OnInit {
       firstOtRound: 25,
       attackersWon: false,
       showAliveKDA: true,
+      agentSelectStartTime: 0,
       tools: {
         seriesInfo: {
           needed: 3,
@@ -85,7 +86,7 @@ export class TestingComponent implements OnInit {
         },
         playercamsInfo: {
           enable: true,
-          enabledPlayers: ["FNC OO AA EE#1337", "nobii#DEBUG"],
+          enabledPlayers: [],
           removeTricodes: false,
         },
         nameOverrides: { overrides: [] },
@@ -93,6 +94,7 @@ export class TestingComponent implements OnInit {
           type: "tournamentInfo",
           sponsors: [],
         },
+        agentSelectActive: false,
       },
       toastInfo: {
         active: false,
@@ -113,7 +115,7 @@ export class TestingComponent implements OnInit {
           players: [
             {
               name: "MrFoxy",
-              fullName: "MrFoxy#prod",
+              fullName: "MrFoxy#DEBUG",
               playerId: 0,
               isAlive: true,
               agentInternal: "Stealth",
@@ -150,7 +152,7 @@ export class TestingComponent implements OnInit {
             },
             {
               name: "RedStone201",
-              fullName: "TTV RedStone201#uhhhh",
+              fullName: "TTV RedStone201#DEBUG",
               playerId: 0,
               isAlive: true,
               agentInternal: "Smonk",
@@ -605,7 +607,7 @@ export class TestingComponent implements OnInit {
     });
   }
 
-  spikeTimer?: NodeJS.Timeout;
+  spikeTimer?: ReturnType<typeof setTimeout>;
 
   plantSpike() {
     this.dataModel.match.update((v) => {
@@ -815,7 +817,7 @@ export class TestingComponent implements OnInit {
   }
   //#endregion
 
-  timeoutTimerRef?: NodeJS.Timeout;
+  timeoutTimerRef?: ReturnType<typeof setInterval>;
   startTimeoutTimer() {
     this.timeoutTimerRef = setInterval(() => {
       this.dataModel.match.update((v) => {

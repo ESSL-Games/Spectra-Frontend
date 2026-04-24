@@ -9,30 +9,30 @@
             <p>{{ mapInfo.map }}</p>
             <img
               [src]="mapInfo.left.logo"
-              alt=""
               class="ml-1 h-4.5 w-4.5 object-contain px-1.5 py-0.5 align-middle"
             />
             <p>{{ mapInfo.left.score }} - {{ mapInfo.right.score }}</p>
             <img
               [src]="mapInfo.right.logo"
-              alt=""
               class="ml-1 h-4.5 w-4.5 object-contain px-1.5 py-0.5 align-middle"
             />
           }
           @case ("present") {
-            {{ TranslateKeys.Mapinfo_Live | translate: { map: dataModel.match().map } }}
-            <img
-              [src]="mapInfo.logo"
-              alt=""
-              class="ml-1 h-4.5 w-4.5 object-contain px-1.5 py-0.5 align-middle"
-            />
+            @if (mapInfo.logo !== "") {
+              {{ TranslateKeys.Mapinfo_Live | translate: { map: dataModel.match().map } }}
+              <img
+                [src]="mapInfo.logo"
+                class="ml-1 h-4.5 w-4.5 object-contain px-1.5 py-0.5 align-middle"
+              />
+            } @else {
+              {{ TranslateKeys.Mapinfo_Live | translate: { map: dataModel.match().map } }}
+            }
           }
           @case ("future") {
             @if (mapInfo.logo !== "") {
               {{ TranslateKeys.Mapinfo_Next | translate: { map: mapInfo.map } }}
               <img
                 [src]="mapInfo.logo"
-                alt=""
                 class="ml-1 h-4.5 w-4.5 object-contain px-1.5 py-0.5 align-middle"
               />
             } @else {
