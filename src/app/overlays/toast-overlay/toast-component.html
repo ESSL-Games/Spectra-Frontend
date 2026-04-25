@@ -57,6 +57,12 @@
             class="vw-60 h-auto object-contain"
           />
         </div>
+        } @else if (toastInfo().selectedTeam === "none" && toastInfo().eventLogoEnabled) {
+        <div
+          class="ml-auto flex w-27.5 shrink-0 items-center justify-center rounded-s-[0.4375rem] bg-[#161616]"
+        >
+          <img [src]="tournamentIconUrl()" class="vw-60 h-auto object-contain" />
+        </div>
         } @else {
         <div></div>
         }
@@ -83,7 +89,7 @@
             {{ toastInfo().message }}
           </span>
         </div>
-        @if (toastInfo().eventLogoEnabled) {
+        @if (toastInfo().eventLogoEnabled && toastInfo().selectedTeam !== "none") {
         <div
           class="ml-auto flex w-27.5 shrink-0 items-center justify-center rounded-e-[0.4375rem] bg-[#161616]"
         >
