@@ -14,7 +14,7 @@
         <p>{{ formatNumber(player.moneySpent) }}</p>
       </div>
       <div class="flex flex-row items-center justify-center gap-0.5 text-white/80">
-        <img class="h-3 w-3" src="assets/misc/ValorantCreditsWhite.svg" />
+        <img class="h-3 w-3" src="/assets/misc/ValorantCreditsWhite.svg" alt="" />
         <p>{{ formatNumber(player.money) }}</p>
       </div>
     </div>
@@ -39,7 +39,6 @@
         class="absolute inset-0"
         [class.scale-x-[-1]]="right"
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
         width="224"
         height="52"
         viewBox="0 0 224 52"
@@ -135,6 +134,7 @@
         class="absolute top-1/2 h-6 w-6 -translate-y-1/2 transform"
         [class]="right ? 'right-2' : 'left-2'"
         src="assets/shields/{{ player.armorName }}.webp"
+        alt=""
       />
 
       <div
@@ -145,6 +145,7 @@
           class="max-h-6 w-auto object-contain"
           [class.flip]="!right"
           src="assets/weapons/{{ player.highestWeapon }}Killfeed.webp"
+          alt=""
         />
       </div>
 
@@ -169,7 +170,6 @@
       class="absolute inset-0"
       [class.scale-x-[-1]]="right"
       xmlns="http://www.w3.org/2000/svg"
-      xmlns:xlink="http://www.w3.org/1999/xlink"
       width="382"
       height="52"
       viewBox="0 0 382 52"
@@ -247,6 +247,7 @@
         [class]="right ? 'right-0' : 'left-0'"
         [class.flip]="right"
         src="assets/agents/{{ player.agentInternal }}Icon.webp"
+        alt=""
       />
 
       <div
@@ -257,14 +258,14 @@
           class="font-foundry-bold text-nowrap text-white"
           [class]="right ? 'text-right' : 'text-left'"
           [class]="
-            getDisplayName(player.fullName, player.name).length > 15
+            getDisplayName(player.riotId, player.name).length > 15
               ? 'text-[13px]'
-              : getDisplayName(player.fullName, player.name).length > 12
+              : getDisplayName(player.riotId, player.name).length > 12
                 ? 'text-[17px]'
                 : 'text-[19px]'
           "
         >
-          {{ getDisplayName(player.fullName, player.name) }}
+          {{ getDisplayName(player.riotId, player.name) }}
         </p>
       </div>
 

@@ -15,20 +15,15 @@ export class PlayercamsComponent implements OnInit {
   readonly dataModel = inject(DataModelService);
   readonly streamService = inject(PlayercamStreamService);
   readonly oneVsOneService = inject(OneVersusOneService);
-  getDisplayName = inject(DisplayNameService).getDisplayName;
+
+  displayNameService = inject(DisplayNameService);
+  getDisplayName = (puuid: string, fallback: string) =>
+    this.displayNameService.getDisplayName(puuid, fallback);
 
   isOneVersusOne = computed(() => this.oneVsOneService.isOneVersusOne());
 
-  enabledPlayers = computed(() => {
-    let toReturn = this.dataModel.playercamsInfo().enabledPlayers;
-    if (!toReturn || toReturn.length === 0) {
-      toReturn = [];
-    }
-    return toReturn;
-  });
-
   ngOnInit() {
-    this.streamService.initializeFromEnabledPlayers(this.enabledPlayers());
+    this.streamService.initializeFromTeams();
   }
 
   getStream(playerFullName: string): SafeResourceUrl | undefined {

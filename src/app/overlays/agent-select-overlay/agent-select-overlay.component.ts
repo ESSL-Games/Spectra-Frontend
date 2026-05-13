@@ -14,6 +14,7 @@ import {
 } from "@angular/core";
 import { DataModelService } from "../../services/dataModel.service";
 import { AgentSelectPlayerInfoComponent } from "../../components/agent-select/player-info/player-info.component";
+import { DisplayNameService } from "../../services/displayName.service";
 
 @Component({
   selector: "app-agent-select-overlay",
@@ -25,6 +26,11 @@ import { AgentSelectPlayerInfoComponent } from "../../components/agent-select/pl
 export class AgentSelectOverlayComponent implements AfterViewInit, OnDestroy {
   readonly dataModel = inject(DataModelService);
   private readonly ngZone = inject(NgZone);
+
+  displayNameService = inject(DisplayNameService);
+  getDisplayName = (puuid: string, fallback: string) =>
+    this.displayNameService.getDisplayName(puuid, fallback);
+
   private readonly agentSelectDurationMs = 95_000;
   private animationFrameId?: number;
   private readonly nowMs = signal(performance.now());

@@ -1,5 +1,5 @@
-import { Component, Input, inject, input } from "@angular/core";
-import { Config } from "../../../shared/config";
+import { Component, Input, input } from "@angular/core";
+import { IShieldData } from "../../../services/Types";
 
 @Component({
   selector: "app-shield-icon",
@@ -8,8 +8,6 @@ import { Config } from "../../../shared/config";
   imports: [],
 })
 export class ShieldIconComponent {
-  private config = inject(Config);
-
-  @Input({ required: true }) type!: "Heavy" | "Regen" | "Light" | "None";
+  @Input({ required: true }) type!: IShieldData;
   readonly side = input<string>();
 }

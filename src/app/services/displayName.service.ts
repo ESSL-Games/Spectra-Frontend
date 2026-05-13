@@ -1,18 +1,18 @@
 import { inject, Injectable } from "@angular/core";
-import { DataModelService } from "./dataModel.service";
+import { DataModelExtraService } from "./dataModelExtra.service";
 
 @Injectable({
   providedIn: "root",
 })
 export class DisplayNameService {
-  readonly dataModel = inject(DataModelService);
-  public getDisplayName(fullName: string, fallback: string): string {
-    const map = this.dataModel.match().tools.nameOverrides.overrides as any;
-    if (!map || typeof map.get !== "function") {
-      //check that map is actually a map (type shenanigans)
-      return fallback;
-    } else {
-      return map.get(fullName) || fallback;
+  private dataModelExtra = inject(DataModelExtraService);
+
+  public getDisplayName(puuid: string, fallback: string): string {
+    const playerExtra = this.dataModelExtra.extra().players.find((entry) => entry.riotId === puuid);
+    if (playerExtra && playerExtra.name !== "") {
+      return playerExtra.name;
     }
+
+    return fallback;
   }
 }

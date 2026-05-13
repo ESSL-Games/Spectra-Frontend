@@ -1,4 +1,5 @@
 import { Component, Input } from "@angular/core";
+import { IPlayerData } from "../../../services/Types";
 
 @Component({
   selector: "app-abilities-new-prototype",
@@ -7,7 +8,7 @@ import { Component, Input } from "@angular/core";
   styleUrl: "./abilities.component.css",
 })
 export class AbilitiesComponent {
-  @Input() player!: any;
+  @Input() player!: IPlayerData;
   @Input() right = false;
 
   isAvailable(availablility: number): boolean {

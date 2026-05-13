@@ -5,6 +5,7 @@ import { DataModelService } from "../../../services/dataModel.service";
 import { DisplayNameService } from "../../../services/displayName.service";
 import { UltimateComponent } from "../../common/ultimate-tracker/ultimate-tracker.component";
 import { AbilitiesComponent } from "../../common/abilities/abilities.component";
+import { IPlayerData } from "../../../services/Types";
 
 @Component({
   selector: "app-playerscore-new",
@@ -14,9 +15,12 @@ import { AbilitiesComponent } from "../../common/abilities/abilities.component";
 })
 export class PlayerScoreboardCardComponent {
   dataModel = inject(DataModelService);
-  getDisplayName = inject(DisplayNameService).getDisplayName;
 
-  @Input() player!: any;
+  displayNameService = inject(DisplayNameService);
+  getDisplayName = (puuid: string, fallback: string) =>
+    this.displayNameService.getDisplayName(puuid, fallback);
+
+  @Input() player!: IPlayerData;
 
   @Input() right = false;
   // @Input() color: "attacker" | "defender" = "defender";

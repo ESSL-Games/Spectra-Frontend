@@ -1,5 +1,7 @@
 export class Config {
   serverEndpoint = "http://localhost:5200";
+  extraEndpoint = "http://localhost:3000";
+  extraEnabled = "false";
   redirectUrl = "https://valospectra.com";
   sponsorImageUrls: string[] = [];
   sponsorImageRotateSpeed = 5000; // in milliseconds

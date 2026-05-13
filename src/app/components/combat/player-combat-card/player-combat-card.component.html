@@ -65,7 +65,6 @@
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
         width="309.87"
         height="51.334"
         viewBox="0 0 309.87 51.334"
@@ -103,7 +102,6 @@
         <div class="absolute top-0 left-0 h-full w-full">
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            xmlns:xlink="http://www.w3.org/1999/xlink"
             width="116.018"
             height="53.107"
             viewBox="0 0 116.018 53.107"
@@ -140,7 +138,6 @@
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
         width="153.111"
         height="44.364"
         viewBox="0 0 153.111 44.364"
@@ -174,13 +171,7 @@
       [class]="right() ? 'left-0' : 'right-0'"
       [class.flip]="right()"
     >
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
-        width="312"
-        height="90"
-        viewBox="0 0 312 90"
-      >
+      <svg xmlns="http://www.w3.org/2000/svg" width="312" height="90" viewBox="0 0 312 90">
         <defs>
           <linearGradient
             id="spectator-in-box-gradient"
@@ -231,6 +222,7 @@
       [class.flip]="right()"
       [class]="right() ? 'right-0' : 'left-0'"
       src="assets/agents/{{ player.agentInternal }}{{ player.iconNameSuffix }}Icon.webp"
+      alt=""
       style="clip-path: url(#agent-icon-mask)"
     />
   </div>
@@ -280,7 +272,7 @@
               class="absolute flex flex-row items-center"
               [class]="right() ? 'right-30' : 'left-30'"
             >
-              <img class="vw-12 vh-12" src="assets/misc/ValorantCreditsWhite.svg" />
+              <img class="vw-12 vh-12" src="/assets/misc/ValorantCreditsWhite.svg" alt="" />
               <p>{{ formatNumber(player.money) }}</p>
             </div>
           </div>
@@ -292,9 +284,9 @@
         [class.flex-row-reverse!]="right()"
         [class]="right() ? 'right-17' : 'left-17'"
       >
-        {{ getDisplayName(player.fullName, player.name) }}
+        {{ getDisplayName(player.riotId, player.name) }}
         @if (player.isCaptain) {
-          <img class="vw-17 vh-17 self-baseline" src="assets/misc/TeamCaptain.svg" />
+          <img class="vw-17 vh-17 self-baseline" src="/assets/misc/TeamCaptain.svg" alt="" />
         }
       </div>
     </div>
@@ -315,6 +307,7 @@
           class="w-full object-contain object-right"
           [class.flip]="!right()"
           src="assets/weapons/{{ player.highestWeapon }}Killfeed.webp"
+          alt=""
         />
       </div>
 
@@ -351,7 +344,6 @@
     <div class="absolute top-0.5 left-0.5 z-0 h-full w-full">
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        xmlns:xlink="http://www.w3.org/1999/xlink"
         width="253.166"
         height="6.083"
         viewBox="0 0 253.166 6.083"
@@ -459,7 +451,8 @@
       <!-- Spike icon with black filter -->
       <img
         class="vw-28 vh-28 relative top-0.5 z-10"
-        src="assets/misc/Spike_Icon.svg"
+        src="/assets/misc/Spike_Icon.svg"
+        alt=""
         style="filter: brightness(0)"
       />
     </div>

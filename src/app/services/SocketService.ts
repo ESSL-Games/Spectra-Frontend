@@ -9,6 +9,9 @@ export class SocketService {
   mapbanSocket!: io.Socket;
   mapbanSubscribers: Function[] = [];
 
+  extraSocket!: io.Socket;
+  extraSubscribers: Function[] = [];
+
   private static instance: SocketService;
 
   public static getInstance(): SocketService {
@@ -96,11 +99,48 @@ export class SocketService {
     return this;
   }
 
+  public connectExtra(socketEndpoint: string): SocketService {
+    if (this.extraSocket && this.extraSocket.connected) {
+      console.warn("SocketService Match is already connected. Reusing existing connection.");
+      return this;
+    }
+
+    this.extraSocket = io.connect(socketEndpoint, {
+      autoConnect: true,
+      reconnection: true,
+    });
+
+    this.extraSocket.once("logon_success", () => {
+      console.log("Logged on successfully to Extra");
+    });
+
+    //registering main data handler
+    this.extraSocket.on("extra_data", (data: string) => {
+      this.extraSubscribers.forEach((e) => e(JSON.parse(data)));
+    });
+
+    //setting up reconnection attempt handler
+    this.extraSocket.io.on("reconnect_attempt", (attempt: number) => {
+      console.log(`Connection lost, attempting to reconnect to Extra server (Attempt: ${attempt})`);
+    });
+
+    //setting up reconnection handler
+    this.extraSocket.io.on("reconnect", () => {
+      console.log("Reconnected to Extra server");
+    });
+
+    return this;
+  }
+
   subscribeMatch(handler: Function) {
     this.matchSubscribers.push(handler);
   }
 
   subscribeMapban(handler: Function) {
     this.mapbanSubscribers.push(handler);
+  }
+
+  subscribeExtra(handler: Function) {
+    this.extraSubscribers.push(handler);
   }
 }

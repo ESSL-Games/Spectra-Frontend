@@ -1,7 +1,7 @@
 import { Component, inject, OnInit, signal } from "@angular/core";
 import { MatchOverlayComponent } from "../match-overlay/match-overlay.component";
 import { DataModelService, initialMatchData } from "../../services/dataModel.service";
-import { IMatchData } from "../../services/Types";
+import { IMatchData, IShieldData } from "../../services/Types";
 import { LiveToastComponent } from "../toast-overlay/toast-component";
 
 @Component({
@@ -116,7 +116,7 @@ export class TestingComponent implements OnInit {
             {
               name: "MrFoxy",
               fullName: "MrFoxy#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Stealth",
               isObserved: false,
@@ -153,7 +153,7 @@ export class TestingComponent implements OnInit {
             {
               name: "RedStone201",
               fullName: "TTV RedStone201#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Smonk",
               isObserved: false,
@@ -190,7 +190,7 @@ export class TestingComponent implements OnInit {
             {
               name: "ThreeOfLife",
               fullName: "ThreeOfLife#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "BountyHunter",
               isObserved: false,
@@ -227,7 +227,7 @@ export class TestingComponent implements OnInit {
             {
               name: "Fourcefield",
               fullName: "Fourcefield#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Killjoy",
               isObserved: false,
@@ -264,7 +264,7 @@ export class TestingComponent implements OnInit {
             {
               name: "FIVEbyFIVE",
               fullName: "FIVEbyFIVE#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Iris",
               isObserved: false,
@@ -343,7 +343,7 @@ export class TestingComponent implements OnInit {
             {
               name: "nobii",
               fullName: "nobii#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Grenadier",
               isObserved: false,
@@ -380,7 +380,7 @@ export class TestingComponent implements OnInit {
             {
               name: "delusion",
               fullName: "delusion#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Rift",
               isObserved: false,
@@ -417,7 +417,7 @@ export class TestingComponent implements OnInit {
             {
               name: "CowTipper",
               fullName: "CowTipper#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Sprinter",
               isObserved: false,
@@ -454,7 +454,7 @@ export class TestingComponent implements OnInit {
             {
               name: "DodoDaniel",
               fullName: "DodoDaniel#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "BountyHunter",
               isObserved: false,
@@ -491,7 +491,7 @@ export class TestingComponent implements OnInit {
             {
               name: "Eeliminator",
               fullName: "Eeliminator#DEBUG",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Stealth",
               isObserved: false,
@@ -747,7 +747,7 @@ export class TestingComponent implements OnInit {
     });
   }
 
-  armorOrder = ["Heavy", "Regen", "Light", "None"];
+  armorOrder: IShieldData[] = ["Heavy", "Regen", "Light", "None"];
   changeShield(teamIndex: number, playerIndex: number) {
     this.dataModel.match.update((v) => {
       const ret = v;

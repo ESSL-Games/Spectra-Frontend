@@ -6,6 +6,7 @@ import { ShieldIconComponent } from "../../common/shield-icon/shield-icon.compon
 import { AgentNameService } from "../../../services/agentName.service";
 import { DisplayNameService } from "../../../services/displayName.service";
 import { AgentRoleService } from "../../../services/agentRole.service";
+import { IPlayerData } from "../../../services/Types";
 
 @Component({
   selector: "app-player-combat-card",
@@ -16,13 +17,15 @@ import { AgentRoleService } from "../../../services/agentRole.service";
 export class PlayerCombatCardComponent implements OnChanges {
   dataModel = inject(DataModelService);
 
-  @Input() player!: any;
+  @Input() player!: IPlayerData;
   @Input() playerHealth!: number; //only needed so change detection can give us an event for health change
 
   readonly isObserved = input<boolean>(); //only needed so change detection can correctly trigger the color switch
   readonly isAlive = input<boolean>();
 
-  getDisplayName = inject(DisplayNameService).getDisplayName;
+  displayNameService = inject(DisplayNameService);
+  getDisplayName = (puuid: string, fallback: string) =>
+    this.displayNameService.getDisplayName(puuid, fallback);
 
   right = input<boolean>(false);
   readonly color = input<"attacker" | "defender">();

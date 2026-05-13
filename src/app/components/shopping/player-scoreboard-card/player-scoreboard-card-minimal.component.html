@@ -7,6 +7,7 @@
     class="vw-74 vh-74"
     [class.flip]="right"
     src="assets/agents/{{ player.agentInternal }}Icon.webp"
+    alt=""
   />
   <div
     class="vw-120 flex flex-col items-center justify-center"
@@ -17,10 +18,14 @@
       {{ getAgentName(player.agentInternal) }}
     </p>
     <p class="font-montserrat text-lg font-semibold text-nowrap text-white">
-      {{ getDisplayName(player.fullName, player.name) }}
+      {{ getDisplayName(player.riotId, player.name) }}
     </p>
   </div>
-  <img class="vw-36 vh-36" src="assets/roles/{{ getAgentRole(player.agentInternal) }}.webp" />
+  <img
+    class="vw-36 vh-36"
+    src="assets/roles/{{ getAgentRole(player.agentInternal) }}.webp"
+    alt=""
+  />
   <div class="mx-4 flex flex-row justify-center gap-3 font-semibold text-white">
     <div class="font-montserrat vw-41 flex flex-col items-center justify-center text-white">
       <div class="text-xs font-bold">Kills</div>

@@ -1,8 +1,8 @@
-@if (dataModel.playercamsInfo().enable && !isOneVersusOne()) {
+@if (!isOneVersusOne()) {
   <div [class.hidden]="dataModel.match().roundPhase !== 'combat'">
     @for (team of dataModel.teams(); track $index; let teamIndex = $index) {
       @for (player of team.players; track $index) {
-        @if (this.enabledPlayers().includes(player.fullName)) {
+        @if (player.isAlive) {
           <div
             class="absolute box-border flex aspect-video h-44 flex-col justify-end overflow-clip border-black/65 bg-black/65"
             [class.hidden]="!player.isObserved"
@@ -38,7 +38,7 @@
                     "
                   />
                 </svg>
-                <img class="z-1 aspect-square h-6/10" src="assets/misc/crosshair.svg" />
+                <img class="z-1 aspect-square h-6/10" src="/assets/misc/crosshair.svg" alt="" />
                 <p class="font-dinnext-medium z-1 text-xl text-white">
                   {{ player.killsThisRound }}
                 </p>
@@ -52,7 +52,7 @@
               <div
                 class="font-dinnext-bold w-full max-w-85 overflow-clip px-2 text-left text-lg whitespace-nowrap text-white"
               >
-                {{ getDisplayName(player.fullName, player.name) }}
+                {{ getDisplayName(player.riotId, player.name) }}
               </div>
               <div class="font-foundry-bold w-full px-3 text-right text-lg text-white">
                 {{ player.kills }} / {{ player.deaths }} / {{ player.assists }}

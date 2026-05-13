@@ -32,12 +32,12 @@ export interface ITeamData {
 export interface IPlayerData {
   name: string;
   fullName: string;
-  playerId: number;
+  riotId: string;
   isAlive: boolean;
   agentInternal: string;
   locked: boolean;
   isObserved: boolean;
-  armorName: string;
+  armorName: IShieldData;
   money: number;
   moneySpent: number;
   highestWeapon: string;
@@ -66,6 +66,8 @@ export interface IPlayerData {
   };
   iconNameSuffix: string;
 }
+
+export type IShieldData = "Heavy" | "Regen" | "Light" | "None";
 
 export interface IRoundReason {
   type: "lost" | "kills" | "defused" | "detonated" | "timeout" | "upcoming";
@@ -262,3 +264,19 @@ export interface ICustomFormatData {
 }
 
 export type Stage = "ban" | "pick" | "side" | "decider";
+
+//#endregion
+//#region Extra
+
+export interface IExtraData {
+  players: IExtraPlayer[];
+  streamUrlPrefix: string;
+  streamUrlSuffix: string;
+}
+
+export interface IExtraPlayer {
+  id: number;
+  riotId: string;
+  name: string;
+  fullname: string;
+}

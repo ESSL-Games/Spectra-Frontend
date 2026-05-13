@@ -114,12 +114,12 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Test#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Vampire",
               locked: false,
               isObserved: false,
-              armorName: "",
+              armorName: "None",
               money: 0,
               moneySpent: 0,
               highestWeapon: "",
@@ -151,7 +151,7 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Testg#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Smonk",
               locked: false,
@@ -188,7 +188,7 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Testg#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Wushu",
               locked: false,
@@ -225,7 +225,7 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Testg#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Wushu",
               locked: false,
@@ -262,7 +262,7 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Testg#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Wushu",
               locked: false,
@@ -337,7 +337,7 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Testg#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Wushu",
               locked: false,
@@ -374,7 +374,7 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Testg#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Smonk",
               locked: false,
@@ -411,7 +411,7 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Testg#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Wushu",
               locked: false,
@@ -448,7 +448,7 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Testg#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Wushu",
               locked: false,
@@ -485,7 +485,7 @@ export class TestingAgentSelectComponent implements OnInit, OnDestroy {
             {
               name: "Test",
               fullName: "Testg#ABC",
-              playerId: 0,
+              riotId: "",
               isAlive: true,
               agentInternal: "Wushu",
               locked: false,

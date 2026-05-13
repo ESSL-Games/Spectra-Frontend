@@ -36,7 +36,7 @@
       </div>
     </div>
     <div class="justify-self-center">
-      <img alt="" src="assets/agent-select/vs_component.svg" [class.scaleVersus]="scaleVersus" />
+      <img alt="" src="/assets/agent-select/vs_component.svg" [class.scaleVersus]="scaleVersus" />
     </div>
     <div class="flex min-w-0 items-center justify-end gap-6">
       <div #teamNameContainer class="flex h-full w-158 min-w-0 flex-row items-center gap-2">
@@ -96,7 +96,7 @@
           [class.translatePlayerCardLeft]="translatePlayerCardLeft"
           [agent]="player.agentInternal"
           [locked]="player.locked"
-          [playerName]="player.name"
+          [playerName]="getDisplayName(player.riotId, player.name)"
           [color]="dataModel.teams()[0].isAttacking ? 'attacker' : 'defender'"
           [down]="false"
           [animationDelayMs]="(dataModel.teams()[0].players.length - 1 - $index) * 100"
@@ -123,7 +123,7 @@
           [class.translatePlayerCardRight]="translatePlayerCardRight"
           [agent]="player.agentInternal"
           [locked]="player.locked"
-          [playerName]="player.name"
+          [playerName]="getDisplayName(player.riotId, player.name)"
           [color]="dataModel.teams()[1].isAttacking ? 'attacker' : 'defender'"
           [down]="true"
           [animationDelayMs]="$index * 100"

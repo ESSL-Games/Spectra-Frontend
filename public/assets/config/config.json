@@ -1,5 +1,7 @@
 {
-  "serverEndpoint": "https://eu.valospectra.com:5200",
+  "serverEndpoint": "http://localhost:5200",
+  "extraEndpoint": "http://localhost:3000",
+  "extraEnabled": "false",
   "redirectUrl": "/testing",
   "sponsorImageUrls": ["/assets/misc/logo.webp"],
   "sponsorImageRotateSpeed": 5000,
