@@ -1,7 +1,8 @@
-import { Component, Input, OnInit } from "@angular/core";
+import { Component, inject, Input, OnInit } from "@angular/core";
 import { AgentNameService } from "../../../services/agentName.service";
 import { AgentRoleService } from "../../../services/agentRole.service";
 import { StatsApiMatchPlayer } from "../StatsApiMapping";
+import { DisplayNameService } from "../../../services/displayName.service";
 
 @Component({
   selector: "app-regular-player",
@@ -10,6 +11,10 @@ import { StatsApiMatchPlayer } from "../StatsApiMapping";
   styleUrl: "./regular-player.css",
 })
 export class RegularPlayer implements OnInit {
+  displayNameService = inject(DisplayNameService);
+  getDisplayName = (puuid: string, fallback: string) =>
+    this.displayNameService.getDisplayName(puuid, fallback);
+
   @Input({ required: true })
   player!: StatsApiMatchPlayer;
 
