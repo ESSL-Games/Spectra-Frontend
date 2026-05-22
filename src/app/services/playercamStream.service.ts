@@ -53,10 +53,6 @@ export class PlayercamStreamService {
       .extra()
       .players.find((entry) => entry.riotId === player.riotId);
     if (!playerExtra) return this.sanitizer.bypassSecurityTrustResourceUrl("");
-    const streamUrl =
-      this.dataModelExtra.extra().streamUrlPrefix +
-      playerExtra.id +
-      this.dataModelExtra.extra().streamUrlSuffix;
-    return this.sanitizer.bypassSecurityTrustResourceUrl(streamUrl);
+    return this.sanitizer.bypassSecurityTrustResourceUrl(playerExtra.playercamUrl);
   }
 }

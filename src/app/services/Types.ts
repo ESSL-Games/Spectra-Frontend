@@ -279,4 +279,5 @@ export interface IExtraPlayer {
   riotId: string;
   name: string;
   fullname: string;
+  playercamUrl: string;
 }
