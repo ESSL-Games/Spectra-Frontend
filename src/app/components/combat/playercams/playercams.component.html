@@ -1,4 +1,4 @@
-@if (!isOneVersusOne()) {
+@if (!isOneVersusOne() && !playercamsDisabled) {
   <div [class.hidden]="dataModel.match().roundPhase !== 'combat'">
     @for (team of dataModel.teams(); track $index; let teamIndex = $index) {
       @for (player of team.players; track $index) {

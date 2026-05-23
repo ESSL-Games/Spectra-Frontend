@@ -4,6 +4,7 @@ import { DataModelService } from "../../../services/dataModel.service";
 import { PlayerCombatCardComponent } from "../player-combat-card/player-combat-card.component";
 import { PlayercamStreamService } from "../../../services/playercamStream.service";
 import { OneVersusOneService } from "../../../services/1v1.service";
+import { ActivatedRoute } from "@angular/router";
 
 @Component({
   selector: "app-1v1",
@@ -15,10 +16,12 @@ export class OneVersusOneComponent implements OnInit {
   dataModel = inject(DataModelService);
   readonly streamService = inject(PlayercamStreamService);
   readonly oneVsOneService = inject(OneVersusOneService);
+  protected route = inject(ActivatedRoute);
 
   isOneVersusOne = computed(() => this.oneVsOneService.isOneVersusOne());
   leftPlayer = computed(() => this.oneVsOneService.leftPlayer());
   rightPlayer = computed(() => this.oneVsOneService.rightPlayer());
+  playercamsDisabled = false;
 
   leftPlayerAnimationClass = computed(() => {
     const index = this.oneVsOneService.leftPlayerIndex();
@@ -67,5 +70,13 @@ export class OneVersusOneComponent implements OnInit {
 
   getStream(playerFullName: string): SafeResourceUrl | undefined {
     return this.streamService.getStream(playerFullName);
+  }
+
+  constructor() {
+    this.route.queryParams.subscribe((params) => {
+      if ((params["disablePlayercams"] as string) === "1") {
+        this.playercamsDisabled = true;
+      }
+    });
   }
 }
